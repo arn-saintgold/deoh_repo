@@ -3,6 +3,7 @@
 *.gz
 *.cd
 *.csv
+*.tsv
 
 # no garbage
 *.log
