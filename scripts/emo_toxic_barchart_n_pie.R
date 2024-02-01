@@ -1,21 +1,10 @@
 library(data.table)
 library(tidyverse)
-library(stringr)
-library(latex2exp)
-library(ggplot2)
-library(ggpattern)
-library(ggrepel)
 
-setwd("~/Documents/project_transfer/yt_analyses")
+plot_path = file.path(plot_dir,'emo_signal_distribution' )
 
-plot_dir <- "emo_plots"
+emo_csv <- fread(emo_csv_path)
 
-emo_csv <- fread("emo_csv_statistics.gz")
-setDT(emo_csv)
-names(emo_csv)
-
-emotions <- c("trust", "joy", "anticipation", "surprise", "fear", "sadness", "anger", "disgust" )
-emo_colors_darker = c('Trust' = '#8fa95e','Joy' = '#ffdf3b', 'Anticipation' = '#ff9f3a', 'Surprise' = '#9dd6ee', 'Fear' = '#67aa67', 'Sadness' = '#44a3ff', 'Anger' = '#ff6e48', 'Disgust' = '#7d70d2')
 
 perc_plot<-emo_csv[emotiveness>0, .(value=colSums(.SD), emo=names(.SD), tot=.N), by=Is_questionable, .SDcols = paste0('has_',emotions)]
 perc_plot[, emo :=str_remove(emo,'has_')%>%str_to_title()]
@@ -106,9 +95,6 @@ get_pie_emo_from_df <- function(my_data , curr_emo = 'Trust', text_size = 6){
   one_emo_pie
 }
 
-setDT(emo_csv)
-names(emo_csv)
-
 emotions <- c("trust", "joy", "anticipation", "surprise", "fear", "sadness", "anger", "disgust" )
 emotions <- c("trust", "fear","joy", "sadness", "anticipation","anger","surprise","disgust")
 
@@ -127,8 +113,8 @@ for (e in emo_in_comments[,emo]%>%unique()){
 setDT(RBT)
 RBT[,err.ci := upper.ci-rg]
 RBT
-#saveRDS(RBT, 'rank_biserial_test_comments.rds')
-RBT<-readRDS('rank_biserial_test_comments.rds')
+saveRDS(RBT, )
+RBT<-readRDS(file.path(plot_dir, 'rank_biserial_test_comments.rds'))
 
 
 perc_plot <- emo_csv[emotiveness>0, .(perc=colSums(.SD)/.N, emo=names(.SD)), by=Label, .SDcols = paste0('has_',emotions)]
@@ -136,8 +122,6 @@ perc_plot[, emo :=str_remove(emo,'has_')%>%str_to_title()]
 names(perc_plot) <- c('Toxicity Level', 'Percentage', 'Emotion')
 t_levels<-perc_plot[, unique(`Toxicity Level`)]
 tox_palette = RColorBrewer::brewer.pal(n=5, "Greens")[2:5]
-
-
 
 visualize_tox_perc5 <- function (q = 'none', textsize = 20){
   emotions <- c("trust", "joy", "anticipation", "surprise", "fear", "sadness", "anger", "disgust" )
@@ -243,9 +227,6 @@ visualize_tox_perc5 <- function (q = 'none', textsize = 20){
 
 much_color <- visualize_tox_perc5(textsize = 16)
 much_color
-
-library(purrr)
-
 
 ## This function allows us to specify which facet to annotate
 annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, data) 
