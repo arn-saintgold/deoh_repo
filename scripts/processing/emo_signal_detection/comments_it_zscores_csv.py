@@ -60,6 +60,8 @@ if __name__ == "__main__":
     filename = "comments_it_cleaning.csv"
     source_path = os.path.join(project_data_dir, data_dir)
     source_file_path = os.path.join(source_path, filename)
+    graph_file_path = os.path.join(source_path, "comments_it_graphs.cd")
+    zscores_file_path = os.path.join(source_path, "comments_it_zscores.csv")
 
     df = pd.read_csv(source_file_path)
 
@@ -104,8 +106,7 @@ if __name__ == "__main__":
             master_zd = master_zd.merge(zd, reset_keys=False)
 
     # save the graphs as compressed dictionary
-    master_cd.dump(dest_dir + "/comments_it_graphs.cd")
-    # master_zd.dump(dest_dir + "/comments_it_zscores.cd")
+    master_cd.dump(graph_file_path)
 
     # save the zscores as standard dictionaries
     zscores = {}
@@ -115,7 +116,7 @@ if __name__ == "__main__":
     zdf = pd.DataFrame.from_dict(zscores, orient="index")
     zdf["dict_idx"] = zdf.index
 
-    zdf.to_csv("data/comments_it_zscores.csv", index=False)
+    zdf.to_csv(zscores_file_path, index=False)
 
     # check for None
     test = [master_cd[k] is None for k in master_cd.keys()]
