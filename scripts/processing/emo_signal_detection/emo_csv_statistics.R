@@ -1,9 +1,9 @@
+# Enriches the original data with emotional signals and other statistics
+# It stores the results in the file 'merged_comments_it_cleaning.csv.gz'
 library(data.table)
 library(ggplot2)
 library(magrittr)
 library(stringr)
-
-setwd("C:/Users/arnou/Documents/yt_analyses")
 
 # merged_comments_it_cleaning.csv.gz is obtained from the files and 
 # R script in 'from_cluster_to_b_merged' folder
