@@ -1,0 +1,8 @@
+*.zip
+*.gz
+*.cd
+*.csv
+*.log
+*.pdf
+*.pkl
+*.joblib
