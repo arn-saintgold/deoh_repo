@@ -1,11 +1,17 @@
+# No data
 *.zip
 *.gz
 *.cd
 *.csv
+
+# no garbage
 *.log
-*.pdf
-*.pkl
-*.joblib
-*.png
 *.DS_Store
 
+# no models
+*.pkl
+*.joblib
+
+# allow images?
+*.pdf
+#*.png
