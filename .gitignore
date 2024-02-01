@@ -4,6 +4,8 @@
 *.cd
 *.csv
 *.tsv
+*.rds
+*.RDS
 
 # no garbage
 *.log
