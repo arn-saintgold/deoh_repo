@@ -1,3 +1,4 @@
+# Merges comments_it_cleaning.csv and 
 library(data.table)
 library(tidyverse)
 
