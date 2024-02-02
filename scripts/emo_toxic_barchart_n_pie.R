@@ -1,10 +1,19 @@
 # Plots distribution of emotions in comments using Barplot and Pies
+# Pies show p(e|r), probability of finding emotion e in a comment, given that 
+#   the comment was posted in a channel with reliability r
+# Barplots show p(e|r,t), probability of finding emotion e in a comment, given 
+#   that the comment is labeled with toxicity label t and was posted in a 
+#   channel with reliability r
 
 plot_path = file.path(plot_dir,'emo_signal_distribution', 'test.pdf' )
 
 emo_csv <- fread(emo_csv_path)
 
-
+# Create data needed for pies
+# The column has_emo indicates if the column 'value' refers to the number of 
+#   comments containing emotion Emotion or not.
+# The column tot contains the number of total comments with reliability 
+#   Reliability
 perc_plot<-emo_csv[emotiveness>0, .(value=colSums(.SD), emo=names(.SD), tot=.N), by=Is_questionable, .SDcols = paste0('has_',emotions)]
 perc_plot[, emo :=str_remove(emo,'has_')%>%str_to_title()]
 names(perc_plot) <- c('Reliability', 'value', 'Emotion', 'tot')
@@ -19,40 +28,7 @@ pie_data <- perc_plot%>%
   mutate(prop = value/tot*100,
          ypos = cumsum(prop)-0.5*prop)
 
-get_pie_emo <- function(my_data = pie_data, curr_emo = 'Trust', text_size = 6){
-  
-  one_emo_pie<-my_data%>%filter(Emotion == curr_emo)%>%
-    ggplot( aes(x="", y=prop, fill=has_emo)) +
-    facet_wrap(.~Reliability, labeller=function(x,y) return (''))+
-    
-    geom_bar_pattern(aes(pattern = Reliability, fill=has_emo),
-                     width=1, color="black",
-                     linewidth=.5, alpha=.8,stat="identity",
-                     pattern_fill = 'black',
-                     pattern_angle = 45,
-                     pattern_density = 0.01,
-                     pattern_spacing = 0.1,
-                     pattern_key_scale_factor = 0.6) +
-    coord_polar("y")+
-    theme_void() + 
-    
-    theme(legend.position="none",
-          text = element_text(size=text_size),
-          plot.background = element_rect_round(color = 'black')) +
-    scale_pattern_manual(values = c(Questionable = "stripe", Reliable = "none")) +
-    
-    geom_text_repel(
-      aes(y = ypos, label=paste0(round(prop,1),'%')),
-      size = text_size, nudge_x = 1, show.legend = FALSE) +
-  
-    scale_fill_manual(values=c('yes_emo'=emo_colors_darker[curr_emo][[1]], 'no_emo'='white'))
-  one_emo_pie
-  
-}
-
-test<-get_pie_emo(curr_emo = 'Disgust')
-test
-
+# The function returns two pie plots, one for each reliability type
 get_pie_emo_from_df <- function(my_data , curr_emo = 'Trust', text_size = 6){
 
   curr_emo = my_data$Emotion%>%unique()
@@ -85,26 +61,6 @@ get_pie_emo_from_df <- function(my_data , curr_emo = 'Trust', text_size = 6){
 }
 
 emotions <- c("trust", "joy", "anticipation", "surprise", "fear", "sadness", "anger", "disgust" )
-#emotions <- c("trust", "fear","joy", "sadness", "anticipation","anger","surprise","disgust")
-
-###########
-# Statistical tests on proportions
-###########
-
-emo_in_comments <- emo_csv[emotiveness>0, .(counts=colSums(.SD), emo=names(.SD)), by=c("Is_questionable", "Label"), .SDcols = paste0('has_',emotions)]
-RBT <- data.frame()
-for (e in emo_in_comments[,emo]%>%unique()){
-  curr_query <- emo_csv[get(e) > 0,.(Label = Label%>%str_extract('[0-9]')%>%as.integer(), Is_questionable)]
-    rank_biserial_test<-wilcoxonRG(x=curr_query[,Label], g = curr_query[,Is_questionable], conf = 0.95, ci=F)
-  RBT<-rbind(RBT,c(emo=e,rank_biserial_test))
-}
-
-setDT(RBT)
-RBT[,err.ci := upper.ci-rg]
-RBT
-saveRDS(RBT, file.path(plot_dir,'rank_biserial_test_comments.rds'))
-RBT<-readRDS(file.path(plot_dir, 'rank_biserial_test_comments.rds'))
-
 
 perc_plot <- emo_csv[emotiveness>0, .(perc=colSums(.SD)/.N, emo=names(.SD)), by=Label, .SDcols = paste0('has_',emotions)]
 perc_plot[, emo :=str_remove(emo,'has_')%>%str_to_title()]
@@ -222,7 +178,7 @@ insets <- pie_data %>%
     grob = ggplotGrob(get_pie_emo_from_df(., text_size = 4)),# +
 
     data = data.frame(Emotion=unique(.$Emotion)),
-    ymin = .51, ymax=.94)
+    ymin = .51, ymax=.87)
   )
 
 rainbow_pie <- much_color +
