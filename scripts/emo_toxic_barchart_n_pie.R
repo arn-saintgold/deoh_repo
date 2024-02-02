@@ -85,7 +85,7 @@ get_pie_emo_from_df <- function(my_data , curr_emo = 'Trust', text_size = 6){
 }
 
 emotions <- c("trust", "joy", "anticipation", "surprise", "fear", "sadness", "anger", "disgust" )
-emotions <- c("trust", "fear","joy", "sadness", "anticipation","anger","surprise","disgust")
+#emotions <- c("trust", "fear","joy", "sadness", "anticipation","anger","surprise","disgust")
 
 ###########
 # Statistical tests on proportions
@@ -102,7 +102,7 @@ for (e in emo_in_comments[,emo]%>%unique()){
 setDT(RBT)
 RBT[,err.ci := upper.ci-rg]
 RBT
-saveRDS(RBT, )
+saveRDS(RBT, file.path(plot_dir,'rank_biserial_test_comments.rds'))
 RBT<-readRDS(file.path(plot_dir, 'rank_biserial_test_comments.rds'))
 
 
@@ -176,7 +176,7 @@ rainbow_bar_plot <- function (q = 'none', textsize = 20){
       facet_rep_wrap(.~Emotion, nrow = 2, scales="free_x", strip.position = "top",  )+
       
       labs(fill = "Toxicity Levels", x = "Emotion", y = ttl)+
-      scale_y_continuous(labels = percent, limits = c(0,.7),breaks = c(0,.2,.4),minor_breaks = seq(0, .4, .1))+
+      scale_y_continuous(labels = percent, limits = c(0,.8),breaks = c(0,.2,.4),minor_breaks = seq(0, .4, .1))+
       scale_x_discrete(position = 'top')+
       scale_pattern_manual(values = c(Questionable = "stripe", Reliable = "none")) +
       guides(
@@ -202,7 +202,7 @@ rainbow_bar_plot <- function (q = 'none', textsize = 20){
 }
 
 much_color <- rainbow_bar_plot(textsize = 16)
-#much_color
+much_color
 
 ## This function allows us to specify which facet to annotate
 annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf, data) 
@@ -222,14 +222,15 @@ insets <- pie_data %>%
     grob = ggplotGrob(get_pie_emo_from_df(., text_size = 4)),# +
 
     data = data.frame(Emotion=unique(.$Emotion)),
-    ymin = .41, ymax=.74)
+    ymin = .51, ymax=.94)
   )
 
 rainbow_pie <- much_color +
   theme(panel.spacing = unit(0, "lines"),
 
         strip.background = element_rect(fill=NA, color = 'black', linewidth = 1))+ 
-  geom_hline(yintercept=.42,
+  geom_hline(yintercept=.52,
              color = "black", linewidth=.5)+
   insets
 ggsave(plot_path, plot=rainbow_pie, device = 'pdf', width = WIDTH, height = HEIGHT, units = 'in', dpi = 600, )
+rainbow_pie
