@@ -53,7 +53,7 @@ for min_comments in [5, 8, 10]:
         with open(os.path.join(results_path, "smote_model.joblib"), "wb") as f:
             dump(SMOTE_model, f)
 
-        # produce SHAP summary with original users
+        # produce SHAP values and summary with original users
         shap_values = shap.TreeExplainer(SMOTE_model).shap_values(X, approximate=False)
         with open(os.path.join(results_path, "shap.pkl"), "wb") as f:
             pkl.dump(shap_values, f)
