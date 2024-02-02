@@ -1,8 +1,5 @@
-library(data.table)
-library(stringr)
-setwd("C:/Users/arnou/Documents/yt_analyses")
-emotions <- c("anger", "trust", "surprise", "disgust", "joy" ,"sadness", "fear", "anticipation")
-emo_csv <- fread("emo_csv_statistics.gz")
+
+emo_csv <- fread(emo_csv_path)
 
 setDT(emo_csv)
 
@@ -52,20 +49,11 @@ usr_emo_lean[, id := row_number(Nome_Utente)]
 usr_emo_lean[, Nome_Utente:=NULL]
 usr_emo_lean[, n_emo := rowSums(.SD > 0), .SDcols = emotions]
 
-fwrite(usr_emo_lean, "dataset/usr_emo_lean.csv.gz", 
+fwrite(usr_emo_lean, file.path(data_dir,"usr_emo_lean.gz"), 
        logical01 = T,
        compress = "gzip",
        na = "NA" )
 
 
-my_lean = usr_emo_lean[leaning>=0.75 & n_comments >= 8,.(Nome_Utente, leaning)]
-my_lean = my_lean[str_length(Nome_Utente)>0]
-setkey(emo_csv, Nome_Utente)
-setkey(my_lean, Nome_Utente)
-res = merge(emo_csv[, .SD, .SDcols = c("Nome_Utente", "Testo",paste0("has_",emotions), "Label")], my_lean, by = "Nome_Utente")
-fwrite(res[has_trust == T], "utenti_questionable_commenti_trust_con_label.tsv", sep="\t")
-fwrite(res[has_fear == T], "utenti_questionable_commenti_fear_con_label.tsv", sep="\t")
 
-#compute N comments with emo E.
-#create matrix M
-# compute chisquare test on M, and different tests for A vs Rest, and O vs V
+#usr_emo_lean_v0 <- fread('../from_server.multishap_results/usr_emo_lean.csv.gz')
