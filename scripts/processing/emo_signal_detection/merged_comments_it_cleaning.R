@@ -1,5 +1,7 @@
 # Merges comments_it_cleaning.csv and stores it in "merged_comments_it_cleaning.csv.gz"
 
+source('packages_n_global_variables.R')
+
 zscore_path = file.path(data_dir, 'comments_it_zscores.csv')
 data_path = file.path(data_dir, 'comments_it_cleaning.csv')
 zscores = fread(zscore_path, drop=c("V1", "Unnamed: 0"))

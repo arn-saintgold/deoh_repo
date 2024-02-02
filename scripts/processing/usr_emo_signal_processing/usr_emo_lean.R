@@ -1,3 +1,4 @@
+source('packages_n_global_variables.R')
 
 emo_csv <- fread(emo_csv_path)
 

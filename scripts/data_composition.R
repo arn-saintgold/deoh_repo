@@ -1,20 +1,10 @@
-library(data.table)
-library(ggplot2)
-library(magrittr)
-library(stringr)
-library(xtable)
-library(RColorBrewer)
+# Recreate plots from previous study (Dynamics of Online Hate[...] Cinelli et al.)
+#   to inspect data composition
 
-emo_csv <- fread("C:\\Users\\arnou\\Documents\\yt_analyses\\emo_csv_statistics.gz")
-setwd("C:/Users/arnou/Documents/yt_analyses")
+source('packages_n_global_variables.R')
 
-setDT(emo_csv)
-#names(emo_csv)
+emo_csv <- fread(emo_csv_path)
 
-
-emotions <- c("anger", "trust", "surprise", "disgust", "joy" ,"sadness", "fear", "anticipation")
-emotions
-#emo_csv = emo_csv[has_emotion == F]
 
 my_pivot = emo_csv[,.(N = .N), by=.(Is_questionable, Label)]
 
@@ -40,7 +30,7 @@ data[, Qlabel:= paste0(100*round(Qfraction, 4), "%" )]
 data[, Rlabel:= paste0(100*round(Rfraction, 4), "%" )]
 
 
-# Make the plot
+# Make the plots
 ggplot(data, aes(ymax=Qymax, ymin=Qymin, xmax=4, xmin=3, fill=Label)) +
   geom_rect() +
   geom_text( x=2, aes(y=QlabelPosition, label=Qlabel, color=Label), size=3.2,fontface = "bold") + # x here controls label position (inner / outer)
@@ -51,7 +41,7 @@ ggplot(data, aes(ymax=Qymax, ymin=Qymin, xmax=4, xmin=3, fill=Label)) +
   theme_void() +
   labs(title= "Questionable Comments distribution")+
   theme(legend.position = "right")
-
+ggsave(file.path(plot_dir,'q_commenets_dist.png'), height = HEIGHT, width = WIDTH, units = 'in')
 
 ggplot(data, aes(ymax=Rymax, ymin=Rymin, xmax=4, xmin=3, fill=Label)) +
   geom_rect() +
@@ -63,4 +53,4 @@ ggplot(data, aes(ymax=Rymax, ymin=Rymin, xmax=4, xmin=3, fill=Label)) +
   theme_void() +
   labs(title= "Reliable Comments distribution")+
   theme(legend.position = "right")
-
+ggsave(file.path(plot_dir,'r_commenets_dist.png'), height = HEIGHT, width = WIDTH, units = 'in')

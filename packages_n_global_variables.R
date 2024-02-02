@@ -5,6 +5,8 @@ library(tidyverse)
 library(data.table)
 # statistical tests
 library(rcompanion)
+# produce latext tables
+library(xtable)
 # graphics packages
 library(ggplot2)
 library(ggpattern)
