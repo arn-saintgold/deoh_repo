@@ -53,7 +53,3 @@ fwrite(usr_emo_lean, file.path(data_dir,"usr_emo_lean.gz"),
        logical01 = T,
        compress = "gzip",
        na = "NA" )
-
-
-
-#usr_emo_lean_v0 <- fread('../from_server.multishap_results/usr_emo_lean.csv.gz')
