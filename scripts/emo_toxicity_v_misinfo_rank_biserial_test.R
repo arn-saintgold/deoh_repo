@@ -1,8 +1,12 @@
 # Statistical tests on proportions: Rank Biserial Test on correlation between 
-# Toxicity in comments with a specific emotion and reliability of the comment
-# Comments are stored in 'rank_biserial_test_comments.rds'
+#   Toxicity in comments with a specific emotion and reliability of the comment
+#   Comments are stored in 'rank_biserial_test_comments.rds'
+
+source('packages_n_global_variables.R')
 
 emo_csv <- fread(emo_csv_path)
+
+emotions <- emotions[c(6, 5, 2, 8, 7, 4, 1, 3)]
 
 emo_in_comments <- emo_csv[emotiveness>0, .(counts=colSums(.SD), emo=names(.SD)), by=c("Is_questionable", "Label"), .SDcols = paste0('has_',emotions)]
 RBT <- data.frame()
