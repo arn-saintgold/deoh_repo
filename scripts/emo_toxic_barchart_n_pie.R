@@ -4,15 +4,16 @@
 # Barplots show p(e|r,t), probability of finding emotion e in a comment, given 
 #   that the comment is labeled with toxicity label t and was posted in a 
 #   channel with reliability r
-
-plot_path = file.path(plot_dir,'emo_signal_distribution', 'test.pdf' )
-
+source('packages_n_global_variables.R')
 emo_csv <- fread(emo_csv_path)
 
-# reorder emotions by positivity/negativity
-emotions <- c("trust", "joy", "anticipation", "surprise", "fear", "sadness", "anger", "disgust" )
+# path to save the file
+plot_path = file.path(plot_dir,'emo_signal_distribution', 'rainbow_pie.pdf' )
 
-# create data for bar plot, and plot it
+# reorder emotions by positivity/negativity
+emotions <- emotions[c(2,5,8,3,7,6,1,4)]
+
+# function to create data for bar plot, and plot it
 rainbow_bar_plot <- function ( textsize = 20, emo_data = emo_csv){
   
   #horizontal line color
