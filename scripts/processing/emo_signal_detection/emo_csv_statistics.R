@@ -4,16 +4,16 @@ source('packages_n_global_variables.R')
 
 source_path = file.path(data_dir, 'merged_comments_it_cleaning.csv.gz')
 
-emo_csv <- fread(source_path)
+merged_comments <- fread(source_path)
 setDT(emo_csv)
 
 names(emo_csv)
 
 # Add a column with the amount of emotions in the comments
-only_emo <- emo_csv[,.SD, .SDcols = c(emotions, "csv_id")]%>%copy()
+only_emo <- merged_comments[,.SD, .SDcols = c(emotions, "csv_id")]%>%copy()
 only_emo[,emotiveness := .(sum(anger, trust, surprise, disgust, joy, sadness, fear, anticipation)), by=csv_id]
 only_emo<-only_emo[,.(csv_id, emotiveness)]
-emo_csv<-merge(emo_csv, only_emo)
+emo_csv<-merge(merged_comments, only_emo)
 # 'has_emotion' column contains information on whether any emotion was detected in the comment
 emo_csv[,has_emotion := emotiveness != 0]
 
