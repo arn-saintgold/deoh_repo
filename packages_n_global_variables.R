@@ -30,6 +30,7 @@ data_dir = file.path('data', 'processed')
 plot_dir = file.path('output')
 emo_csv_path = file.path(data_dir, 'emo_csv_statistics.gz')
 usr_emo_lean_path = file.path(data_dir, 'usr_emo_lean.gz')
+bs_trip_res_path = file.path(data_dir, "emo_triplets_from_shap_usrs.csv" )
 # GLOBAL VARIABLES
 emotions = c("anger", "trust", "surprise", "disgust", "joy", "sadness", "fear", "anticipation")
 

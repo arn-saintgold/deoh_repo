@@ -1,25 +1,23 @@
 # We compute the co-ocurrences of emotions in comments by 
 #   Mainstream-prone and Misinformation-prone users which are present in the 
-#   classification and SHAP summary
+#   classification and SHAP summary, setting to 0 non significative co-occurrences
 
+source('packages_n_global_variables.R')
+
+# order emotion name vector by positivity and relevance
 emotions <- emotions[c(6, 5, 2, 8, 7, 4, 1, 3)]
 
-bs_trip_res <- fread("C:/Users/arnou/Documents/yt_analyses/lollipop/bootstrap_lollipop_to_cluster_results/bootstrap_lollipop_to_cluster/less_bootstrap_sample_triplet.csv")
+bs_trip_res <- fread(bs_trip_res_path)
+
+# Select original triples
 trip_original <- bs_trip_res[is_not_bootstrapped == T]
-#<-data.frame()
-#for (e in unique(bs_trip_res[,emo1])){
-#  trip_original<-rbind(trip_original,bs_trip_res[emo1==e][1:16])
-#}
+# Select bootstrapped triples
 trip_bs<-bs_trip_res[is_not_bootstrapped == F]
-#trip_bs<-data.frame()
-#for (e in unique(bs_trip_res[,emo1])){
-#  trip_bs<-rbind(trip_bs,bs_trip_res[emo1==e][17:dim(bs_trip_res[emo1==e])[1]])
-#}
 
 my_mean <- my_sd <- trip_bs[, lapply(.SD, mean), .SDcols = paste0('has_',emotions), by=c('is_questionable','emo1','emo2')]
 my_sd <- trip_bs[, lapply(.SD, sd), .SDcols = paste0('has_',emotions), by=c('is_questionable','emo1','emo2')]
-#Emo2 = 'joy'
-#Emo2 = 'anticipation
+
+# values < mean + 2* sd are set to 0
 trip_trim <- data.table()
 for(Emo1 in c('',emotions)){
   for(Emo2 in emotions){
@@ -34,6 +32,9 @@ for(Emo1 in c('',emotions)){
     }    
   }
 }
+
+# dump result
+fwrite(trip_trim, file.path(data_dir, "emo_triplets_in_shapley_users_comments.tsv"),sep='\t')
+
 # how many zeroes are there?
 trip_trim[,.SD, .SDcols = paste0('has_',emotions)][,lapply(.SD, function(x) x==0)][,lapply(.SD,sum)][,sum(.SD)]
-fwrite(trip_trim, "emo_triplets_in_shapley_users_comments.tsv",sep='\t')

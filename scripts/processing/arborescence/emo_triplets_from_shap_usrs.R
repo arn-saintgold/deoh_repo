@@ -187,4 +187,4 @@ for (e in emotions){
 }
 
 tictoc::toc()
-fwrite(bootstrap_sample, file.path(data_dir, "less_bootstrap_sample_triplet.csv"))
+fwrite(bootstrap_sample, file.path(data_dir, "emo_triplets_from_shap_usrs.csv"))
