@@ -23,7 +23,6 @@ emo <- emo[, is_questionable := NULL]
 names(emo)[which(names(emo) == "usr_is_questionable")] = "is_questionable"
 comments_emo_in_shapley<-emo[, .SD, .SDcols = c(paste0("has_",emotions), "is_questionable")]
 
-
 # Define function performing parallel computation:
 #   it extracts triples of emotions, i.e. p(e2 & e3 | e1 & r)
 #   the function takes an emotion to filter the comments and a dataset
@@ -182,7 +181,7 @@ message('NA')
 bootstrap_sample <- triple_emo_bootstrap_data (NA,data=comments_emo_in_shapley, n_bootstrap = NN, n_clust = (parallel::detectCores()))
 for (e in emotions){
   message(e)
-  mean_emo <- triple_emo_bootstrap_data (e,data=comments_emo_in_shapley ,  n_bootstrap = NN)
+  mean_emo <- triple_emo_bootstrap_data (e, data=comments_emo_in_shapley, n_bootstrap = NN)
   bootstrap_sample <- rbindlist(list(bootstrap_sample, mean_emo), use.names=T)
 }
 

@@ -1,6 +1,8 @@
 # We compute the co-ocurrences of emotions in comments by 
 #   Mainstream-prone and Misinformation-prone users which are present in the 
-#   classification and SHAP summary, setting to 0 non significative co-occurrences
+#   classification and SHAP summary, setting to 0 non significative 
+#   co-occurrences; significativeness is obtained confronting original 
+#   emotions' values  with bootstrapped emotions' values
 
 source('packages_n_global_variables.R')
 
