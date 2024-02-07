@@ -20,4 +20,3 @@ setDT(RBT)
 RBT[,err.ci := upper.ci-rg]
 RBT
 saveRDS(RBT, file.path(plot_dir,'rank_biserial_test_comments.rds'))
-RBT<-readRDS(file.path(plot_dir, 'rank_biserial_test_comments.rds'))
