@@ -6,7 +6,7 @@ source('packages_n_global_variables.R')
 # emotions <-c("anger", "anticipation", "disgust", "fear", "joy", "trust", "sadness","surprise")
 
 # load comments
-emo_csv <- fread(emo_csv_path)
+emo <- fread(emo_csv_path)
 
 # select users in the shapley summary
 usr_emo_lean <- fread(usr_emo_lean_path)
@@ -62,34 +62,41 @@ triple_emo_bootstrap_data <- function(
   
   for (i in 1:length(emotions)){
     emo2 = emotions[i]
+    #when computing p(e2 & e3 | e1, l)
     if((!is.na(emo1) & emo1!=emo2)|is.na(emo1)){
       temp_emo <- c_emo_trust_original[get(paste0('has_',emo2)) >0]#select comments with emo2
-    }else {
-      temp_emo <- c_emo_trust_original
+    }else { #when computing p(e2 | e1, l) or #when computing p(e2 & e3 | l)
+      temp_emo <- c_emo_trust_original # select everything
     }
     n_emo2 <-temp_emo[, .N, by=is_questionable]
-    reliability_col <- temp_emo[,is_questionable]
+    reliability_col <- temp_emo[,is_questionable] # row of reliabilities to be attached later
     temp_emo <- temp_emo[,.SD*1 ]
     if(!is.na(emo1) & emo1!=emo2){
       temp_emo[, (paste0('has_',emo2)):=NULL]
     }
-    
+    # count comments with e2 and e3 containing each emotion
     temp_emo<-temp_emo[, lapply(.SD,sum ), .SDcols = paste0('has_',emo_subset[emo_subset!=emo2]), by=is_questionable]
-    names(n_emo2)[which(names(n_emo2)=='N')] <-paste0('has_',emo2)
-    temp_emo <- temp_emo[, lapply(.SD,sum ), .SDcols = paste0('has_',emo_subset[emo_subset!=emo2]), by=is_questionable]
+    #add counts of comments with e1 and e2
     setkey(temp_emo, is_questionable)
     setkey(n_emo2, is_questionable)
-    setkey(NN, is_questionable)
+    names(n_emo2)[which(names(n_emo2)=='N')] <-paste0('has_',emo2)
     temp_emo <- merge(temp_emo, n_emo2)
+    #count of comments with e1
+    setkey(NN, is_questionable)
     temp_emo<-merge(temp_emo, NN)
+    # from counts to probabilities: divide by comments with e1
     temp_emo<-temp_emo[, lapply(.SD, '/', N), by=is_questionable][,N:=NULL]
-    
+    #add p(e1 | e1, l)
     if (!is.na(emo1)){
       temp_emo[,(paste0('has_', emo1)):=1 ]  
     }
     
+    # add variables: 
+    # if the row comes from original distribution or is bootstrapped,
     temp_emo[,is_not_bootstrapped := TRUE]
+    # what emotion is e2, 
     temp_emo[,emo2:=emo2]
+    # set the order of the column
     setcolorder(temp_emo, c('emo2', 'is_questionable', paste0('has_', emotions) ))
     
     mean_emo <- rbindlist(list(mean_emo, temp_emo), use.names = sum(dim(mean_emo))>0)
@@ -97,39 +104,44 @@ triple_emo_bootstrap_data <- function(
   
   reliability_col <- c_emo_trust_original[,is_questionable]
     #create matrix to shuffle data later
-  M_emo<-c_emo_trust_original[,.SD*1 #transform data into binary
+  M_emo<-c_emo_trust_original[,.SD*1 #transform data into integer
     ][, is_questionable:=NULL]%>% # exclude reliability column
     t() # convert to matrix and transpose
+  rm(temp_emo)
   
   # start parallel computation
-  rm(temp_emo)
   cl<-parallel::makeForkCluster(getOption("cl.cores", n_clust))
   doParallel::registerDoParallel(cl)
   res<-foreach (j = 1:n_bootstrap,.combine = rbind) %dopar%{
     
-    # shuff_emo is shuffled data of the same shape as temp_emo creation
-    shuff_emo<-M_emo%>%as.integer%>%
-      .[(lapply(1:ncol(M_emo), function(x) sample(nrow(M_emo))+((x-1)*nrow(M_emo)) ))%>%unlist()]%>%
+    # shuff_emo is the shuffled data with the same shape as temp_emo
+    shuff_emo<-M_emo%>%as.integer%>% # convert to array
+      # create index array permutating each group of nrow(M_emo)=7 index and adding the index of columns of M_emo
+      .[(lapply(1:ncol(M_emo), function(x) sample(nrow(M_emo))+((x-1)*nrow(M_emo)) ))%>%unlist()]%>% 
+      # reconvert to matrix, transpose, and reconvert to table
       matrix(data=.,nrow=nrow(M_emo))%>%t()%>%as.data.table()
     shuff_emo<-cbind(shuff_emo, reliability_col)
     names(shuff_emo) <- c(rownames(M_emo),'is_questionable')
     
     temp_res <- data.table()
     
-    NN = shuff_emo[,.N, by = is_questionable] # data for number of comments by reliability
+    # number of comments by reliability
+    NN = shuff_emo[,.N, by = is_questionable] 
     
     for (i in 1:length(emotions)){
       
       emo2 = emotions[i]
       
-      if((!is.na(emo1) & emo1!=emo2)|is.na(emo1)){
-        temp_emo <- shuff_emo[get(paste0('has_',emo2)) >0]#select comments with emo2
-      }else {
-        temp_emo <- shuff_emo
+      if((!is.na(emo1) & emo1!=emo2)|is.na(emo1)){ # when computing p(e2 & e3 | e1, l )
+        temp_emo <- shuff_emo[get(paste0('has_',emo2)) >0] #select comments with emo2
+      }else { # when computing p(e2  | e1, l ) or p(e2 & e3 | l)
+        temp_emo <- shuff_emo #select all
       }
       
+      # number comments with emo
       n_emo2 <-temp_emo[, .N, by=is_questionable]
       reliability_col <- temp_emo[,is_questionable]
+      #transform booleans into integers
       temp_emo <- temp_emo[,.SD*1 ]
       
       if(!is.na(emo1) & emo1!=emo2){
@@ -151,7 +163,6 @@ triple_emo_bootstrap_data <- function(
       }
       
       
-      #temp_emo[, c(paste0("has_",emo1)):=1]
       temp_emo[,is_not_bootstrapped := TRUE]
       temp_emo[,emo2:=emo2]
       setcolorder(temp_emo, c('emo2', 'is_questionable', paste0('has_', emotions) ))

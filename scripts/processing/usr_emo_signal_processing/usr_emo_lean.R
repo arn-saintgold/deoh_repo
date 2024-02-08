@@ -47,7 +47,7 @@ setorder(usr_emo_lean, Nome_Utente)
 names(usr_emo_lean)
 head(usr_emo_lean)
 usr_emo_lean[, id := row_number(Nome_Utente)]
-usr_emo_lean[, Nome_Utente:=NULL]
+#usr_emo_lean[, Nome_Utente:=NULL]
 usr_emo_lean[, n_emo := rowSums(.SD > 0), .SDcols = emotions]
 
 fwrite(usr_emo_lean, file.path(data_dir,"usr_emo_lean.gz"), 
