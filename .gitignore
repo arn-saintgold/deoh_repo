@@ -11,7 +11,9 @@
 *.log
 *.DS_Store
 *.Rproj.user
+*.Rproj
 *.Rhistory
+*.Rproj.user
 # no models
 *.pkl
 *.joblib
@@ -20,4 +22,4 @@
 *.pdf
 #*.png
 
-.Rproj.user
+
