@@ -43,9 +43,6 @@ arbo%>%
         strip.background = element_rect(color = 'black'),
         panel.grid.major.x = element_blank(),
   )
-arbo%>%
-  ggplot(aes(x = is_questionable, y = ratio, fill = fct_relevel(root%>%str_to_title(), emotions%>%str_to_title())))+
-  facet_wrap(.~root)+
-  geom_bar(stat='identity')+
-  scale_fill_manual(values = emo_colors_darker)
+
+
   
