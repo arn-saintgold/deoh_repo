@@ -12,7 +12,7 @@ names(low_arbo)[which(names(low_arbo) == "emo1") ] = "root"
 
 arbo = merge(high_arbo, low_arbo)
 setDT(arbo)
-arbo[, ratio:= high_arborescence/low_arborescence]
+arbo[, ratio:= low_arborescence/high_arborescence]
 arbo[,is_questionable:= if_else(is_questionable == 0, 'Ma', 'Mi')]
 arbo[,root:=factor(root%>%str_to_title())][,is_questionable:=factor(is_questionable)]
 arbo%>%
