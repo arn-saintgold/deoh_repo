@@ -12,7 +12,10 @@ names(low_arbo)[which(names(low_arbo) == "emo1") ] = "root"
 
 arbo = merge(high_arbo, low_arbo)
 setDT(arbo)
-arbo[, ratio:= low_arborescence/high_arborescence]
+#arbo[, ratio:= low_arborescence/high_arborescence]
+#arbo[, ratio:= 3*low_arborescence/high_arborescence]
+#arbo[, ratio:= (low_arborescence+high_arborescence)/(7+7*6/2)]
+arbo[, ratio:= (low_arborescence/(7*6/2)+high_arborescence/7)/2] # how full is the tree?
 arbo[,is_questionable:= if_else(is_questionable == 0, 'Ma', 'Mi')]
 arbo[,root:=factor(root%>%str_to_title())][,is_questionable:=factor(is_questionable)]
 arbo%>%
@@ -31,7 +34,7 @@ arbo%>%
   scale_pattern_manual(values = c("Mi" = "stripe", "Ma" = "none")) +
   coord_flip()+
   theme_minimal()+
-  ylab('Arborescence Ratio')+
+  ylab('# of branches')+
   labs(fill = 'Emotion: ', pattern = 'Truthworthiness: ')+
   guides(fill = guide_legend(nrow = 1 ))+
   theme(text=element_text(size=textsize),
