@@ -7,7 +7,7 @@ source_path = file.path(data_dir, 'merged_comments_it_cleaning.csv.gz')
 merged_comments <- fread(source_path)
 setDT(emo_csv)
 
-names(emo_csv)
+print(names(emo_csv))
 
 # Add a column with the amount of emotions in the comments
 only_emo <- merged_comments[,.SD, .SDcols = c(emotions, "csv_id")]%>%copy()
