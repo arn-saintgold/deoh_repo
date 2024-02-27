@@ -26,7 +26,7 @@ print(confintr::ci_cramersv(chisq.result))
 # Chi square test of independence between each singular emotion presence and 
 # trustworthiness, and Cramer's V for impact size
 
-emo_in_comments <- emo_csv[emotiveness>0, .(counts=colSums(.SD), negativeCounts = .N-colSums(.SD), emo=names(.SD)), by=Is_questionable, .SDcols = paste0('has_',emotions)]
+emo_in_comments <- emo_csv[n_emotions>0, .(counts=colSums(.SD), negativeCounts = .N-colSums(.SD), emo=names(.SD)), by=Is_questionable, .SDcols = paste0('has_',emotions)]
 
 chi_cram <- data.frame()
 for (e in emo_in_comments[,emo]%>%unique()){
