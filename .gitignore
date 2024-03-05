@@ -11,16 +11,16 @@
 # no garbage
 *.log
 *.DS_Store
+
+# no R settings
 *.Rproj.user
 *.Rproj
 *.Rhistory
+
 # no models
 *.pkl
 *.joblib
 
-# allow images?
+# don't allow images
 *.pdf
 *.png
-
-
-.Rproj.user
