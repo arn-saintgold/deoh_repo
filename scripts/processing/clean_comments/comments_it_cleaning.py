@@ -100,11 +100,11 @@ if __name__ == "__main__":
     df["Testo"] = df["Testo"].str.replace("cringe?", "imbarazzante", case=False)
 
     # BAD LANGUAGE AND PROFANITY
-    # df['Testo'] = df['Testo'].str.replace('\sm.?rd(a|\s)', ' merda ', case = False)
-    # df['Testo'] = df['Testo'].str.replace('\sm.?rde\s', ' merde ', case = False)
-    # df['Testo'] = df['Testo'].str.replace('\sco((gl)|j|i)on', ' coglion', case = False)
-    # df['Testo'] = df['Testo'].str.replace('\scasso(\s|$)', ' cazzo ')
-    # df['Testo'] = df['Testo'].str.replace(' mona(\s|$)', ' cretino', case = False)
+    df['Testo'] = df['Testo'].str.replace('\sm.?rd(a|\s)', ' merda ', case = False)
+    df['Testo'] = df['Testo'].str.replace('\sm.?rde\s', ' merde ', case = False)
+    df['Testo'] = df['Testo'].str.replace('\sco((gl)|j|i)on', ' coglion', case = False)
+    df['Testo'] = df['Testo'].str.replace('\scasso(\s|$)', ' cazzo ')
+    df['Testo'] = df['Testo'].str.replace(' mona(\s|$)', ' cretino', case = False)
 
     # PUNCTUATION
     # make sure ',' is followed by a whitespace
