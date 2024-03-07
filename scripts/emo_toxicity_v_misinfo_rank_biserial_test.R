@@ -8,7 +8,7 @@ emo_csv <- fread(emo_csv_path)
 
 emotions <- emotions[c(6, 5, 2, 8, 7, 4, 1, 3)]
 
-emo_in_comments <- emo_csv[emotiveness>0, .(counts=colSums(.SD), emo=names(.SD)), by=c("Is_questionable", "Label"), .SDcols = paste0('has_',emotions)]
+emo_in_comments <- emo_csv[n_emotions>0, .(counts=colSums(.SD), emo=names(.SD)), by=c("Is_questionable", "Label"), .SDcols = paste0('has_',emotions)]
 RBT <- data.frame()
 for (e in emo_in_comments[,emo]%>%unique()){
   curr_query <- emo_csv[get(e) > 0,.(Label = Label%>%str_extract('[0-9]')%>%as.integer(), Is_questionable)]
