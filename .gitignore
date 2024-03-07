@@ -25,3 +25,4 @@
 # don't allow images
 *.pdf
 *.png
+.Rproj.user

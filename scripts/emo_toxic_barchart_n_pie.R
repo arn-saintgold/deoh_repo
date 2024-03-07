@@ -5,10 +5,10 @@
 #   that the comment is labeled with toxicity label t and was posted in a 
 #   channel with reliability r
 source('packages_n_global_variables.R')
-emo_csv <- fread(emo_csv_path)
+emo_csv <- (fread(emo_csv_path))[n_emotions>0]
 
 # path to save the file
-plot_path = file.path(plot_dir,'emo_signal_distribution', 'rainbow_pie.pdf' )
+plot_path = file.path(plot_dir, 'rainbow_pie.pdf' )
 
 # reorder emotions by positivity/negativity
 emotions <- emotions[c(2,5,8,3,7,6,1,4)]
@@ -23,8 +23,8 @@ rainbow_bar_plot <- function ( textsize = 20, emo_data = emo_csv){
   # toxicity-transparency association
   alpha_values = c('Appropriate' = 0.25, 'Inappropriate' = .5, 'Offensive' = .75, 'Violent' = 1 )
   # y axis label
-  ttl <- TeX("$P(e_c | t_c, l_c, \\sum_{e \\in E} e_c > 0) $")
-  ttl <- TeX("$P(\\textit{e}_c | \\textit{t}_c, \\textit{l}_c, \\sum_{\\textit{e} \\in E} \\textit{e}_c > 0) $")
+  ttl <- TeX("$P(e | t, l, \\sum_{e \\in E} e > 0) $")
+  ttl <- TeX("$P(\\textit{e} | \\textit{t}, \\textit{l}, \\sum_{\\textit{e} \\in E} \\textit{e} > 0) $")
   
   # create data for reliable comments
   perc_plot <- emo_data[emotiveness>0 & Is_questionable == "Reliable", .(perc=colSums(.SD)/.N, emo=names(.SD)), by=Label, .SDcols = paste0('has_',emotions)]
@@ -83,7 +83,7 @@ rainbow_bar_plot <- function ( textsize = 20, emo_data = emo_csv){
     scale_pattern_manual(values = c(Questionable = "stripe", Reliable = "none")) +
     guides(
       color = "none", fill = "none",
-      pattern = guide_legend(title="Reliability: ",override.aes = list(fill = "white", color='black')),
+      pattern = guide_legend(title="Trustworthiness: ",override.aes = list(fill = "white", color='black')),
       alpha = guide_legend(title="Toxicity Levels: ",override.aes = list(pattern = "none", color='black'))
       )+
     
@@ -183,5 +183,7 @@ rainbow_pie <- much_color +
   geom_hline(yintercept=.50,
              color = "black", linewidth=.5)+
   insets
-ggsave(plot_path, plot=rainbow_pie, device = 'pdf', width = WIDTH, height = HEIGHT, units = 'in', dpi = 600, )
+rainbow_pie
+
+ggsave(plot_path, plot=rainbow_pie, device='pdf', width = WIDTH, height = HEIGHT, units = 'in', dpi = 600, )
 #rainbow_pie
