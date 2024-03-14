@@ -15,6 +15,7 @@
 
 # no R settings
 *.Rproj.user
+.Rproj.user
 *.Rproj
 *.Rhistory
 
@@ -27,3 +28,10 @@
 *.png
 *.svg
 .Rproj.user
+
+
+# don't allow images
+*.pdf
+*.png
+*.svg
+
