@@ -7,11 +7,18 @@
 source('packages_n_global_variables.R')
 emo_csv <- (fread(emo_csv_path))[n_emotions>0]
 
+emo_colors_darker = alternative_colors_darker
+emo_colors = alternative_colors
+
 # path to save the file
 plot_path = file.path(plot_dir, 'rainbow_pie.pdf' )
 
+# alphabetical order: if desired, uncomment next line, and comment the positivity/negativity ordering
+#emotions <- emotions[c(1,8,4,7,5,6,3,2)]
+
 # reorder emotions by positivity/negativity
 emotions <- emotions[c(2,5,8,3,7,6,1,4)]
+
 
 # function to create data for bar plot, and plot it
 rainbow_bar_plot <- function ( textsize = 20, emo_data = emo_csv){
@@ -165,6 +172,7 @@ annotation_custom2 <- function (grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax
 
 # create insets for barchart
 setDT(pie_data)
+# comment out next line to get alphabetical ordering
 pie_data[,Emotion := factor(Emotion, levels = str_to_title(emotions))]
 insets <- pie_data %>%
   split(f = .$Emotion)%>%
