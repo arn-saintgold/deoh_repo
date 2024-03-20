@@ -39,3 +39,6 @@ WIDTH = 13.03
 HEIGHT = 7.82
 emo_colors = c('Trust' = '#b4c690','Joy' = '#ffea7f', 'Anticipation' = '#ffc57f', 'Surprise' = '#c2e6f4', 'Fear' = '#90c490', 'Sadness' = '#8ec7ff', 'Anger' = '#ffa17f', 'Disgust' = '#b4ace5')
 emo_colors_darker = c('Trust' = '#8fa95e','Joy' = '#ffdf3b', 'Anticipation' = '#ff9f3a', 'Surprise' = '#9dd6ee', 'Fear' = '#67aa67', 'Sadness' = '#44a3ff', 'Anger' = '#ff6e48', 'Disgust' = '#7d70d2')
+
+alternative_colors = cc('Trust' = '#9ae39e','Joy' = '#ffd940', 'Anticipation' = '#ff965e', 'Surprise' = '#686abe', 'Fear' = '#59afab', 'Sadness' = '#5ca0df', 'Anger' = '#ff407b', 'Disgust' = '#a071bc')
+alternative_colors_darker = cc('Trust' = '#81dc86','Joy' = '#ffcf10', 'Anticipation' = '#ff7c36', 'Surprise' = '#4245ae', 'Fear' = '#2f9b96', 'Sadness' = '#3388d7', 'Anger' = '#ff105a', 'Disgust' = '#884dab')
