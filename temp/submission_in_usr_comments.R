@@ -3,7 +3,7 @@ source('packages_n_global_variables.R')
 # get comments from users with defined leaning and at least 8 comments
 usr_emo_lean <- fread(usr_emo_lean_path)
 emo_csv <- fread(emo_csv_path)
-usr_lean = usr_emo_lean[!is.na(is_questionable) & n_comments >= 8, .(Nome_Utente, is_questionable)]
+usr_lean = usr_emo_lean[!is.na(is_questionable) & n_comments >= 8 & n_emo>0, .(Nome_Utente, is_questionable)]
 names(usr_lean)[which(names(usr_lean) == "is_questionable")] = "is_usr_questionable"
 
 emo_csv_usr_lean <- merge(emo_csv, usr_lean)
