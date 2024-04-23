@@ -14,14 +14,16 @@ emo_csv_usr_lean[, has_submission := (has_trust + has_fear)==2]
 #how many users are there?
 emo_csv_usr_lean[,.(unique(Nome_Utente)), by=is_usr_questionable][,.N, by = is_usr_questionable]
 
-#how many users express submission?
+#what is user submission?
+usr_submission <- emo_csv_usr_lean[,.(submission = mean(has_submission), is_usr_questionable = mean(is_usr_questionable) ), by=Nome_Utente]
+usr_submission[,.(mean_submission = mean(submission ), median_submission = median(submission)), by = is_usr_questionable]
+usr_submission[submission != 0,.(mean_submission = mean(submission ), median_submission = median(submission)), by = is_usr_questionable]
+
+#how many users in percentage express submission?
 usr_submission[submission!=0,.N, by=is_usr_questionable][,N]/usr_submission[,.N, by=is_usr_questionable][,N]*100
 #how many users express 10% submission?
 usr_submission[submission>0.1,.N, by=is_usr_questionable][,N]/usr_submission[,.N, by=is_usr_questionable][,N]*100
 
-#what is user submission?
-usr_submission <- emo_csv_usr_lean[,.(submission = mean(has_submission), is_usr_questionable = mean(is_usr_questionable) ), by=Nome_Utente]
-usr_submission[,.(mean_submission = mean(submission ), median_submission = median(submission)), by = is_usr_questionable]
 #summary for reliable
 summary(usr_submission[is_usr_questionable == 0,submission])
 #summary for questionable
