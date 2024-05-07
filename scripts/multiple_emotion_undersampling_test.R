@@ -1,85 +1,18 @@
 source('packages_n_global_variables.R')
+source('compute_dyad_functions.R')
 
-N_RESAMPLINGS = 10e4
+N_RESAMPLINGS = 1e5
 
 # get comments from users with defined leaning and at least 8 comments
 usr_emo_lean <- fread(usr_emo_lean_path)
 emo_csv <- fread(emo_csv_path)
 usr_lean = usr_emo_lean[!is.na(is_questionable) & n_comments >= 8 & n_emo>0, .(Nome_Utente, is_questionable)]
 names(usr_lean)[which(names(usr_lean) == "is_questionable")] = "is_usr_questionable"
-emo_csv_usr_lean <- merge(emo_csv, usr_lean)
 
-# compute dyads in users' comments
-
-emo_csv_usr_lean[, dyad_love := (has_trust + has_joy)==2]
-emo_csv_usr_lean[, dyad_submission := (has_trust + has_fear)==2]
-emo_csv_usr_lean[, dyad_curiosity := (has_trust + has_surprise)==2]
-emo_csv_usr_lean[, dyad_sentimentality := (has_trust + has_sadness)==2]
-emo_csv_usr_lean[, dyad_hope := (has_trust + has_anticipation)==2]
-emo_csv_usr_lean[, dyad_dominance := (has_trust + has_anger)==2]
-emo_csv_usr_lean[, dyad_ambivalence := (has_trust + has_disgust)==2]
-
-emo_csv_usr_lean[, dyad_optimism := (has_joy + has_anticipation)==2]
-emo_csv_usr_lean[, dyad_guilt := (has_joy + has_fear)==2]
-emo_csv_usr_lean[, dyad_pride := (has_joy + has_anger)==2]
-emo_csv_usr_lean[, dyad_delight := (has_joy + has_surprise)==2]
-emo_csv_usr_lean[, dyad_morbidness := (has_joy + has_disgust)==2]
-emo_csv_usr_lean[, dyad_bittersweetness := (has_joy + has_sadness)==2]
-
-emo_csv_usr_lean[, dyad_alarm := (has_fear + has_surprise)==2]
-emo_csv_usr_lean[, dyad_despair := (has_fear + has_sadness)==2]
-emo_csv_usr_lean[, dyad_anxiety := (has_fear + has_anticipation)==2]
-emo_csv_usr_lean[, dyad_shame := (has_fear + has_disgust)==2]
-emo_csv_usr_lean[, dyad_frozenness := (has_fear + has_anger)==2]
-
-emo_csv_usr_lean[, dyad_contempt := (has_anger + has_disgust)==2]
-emo_csv_usr_lean[, dyad_aggressiveness := (has_anger + has_anticipation)==2]
-emo_csv_usr_lean[, dyad_envy := (has_anger + has_sadness)==2]
-emo_csv_usr_lean[, dyad_outrage := (has_anger + has_surprise)==2]
-
-emo_csv_usr_lean[, dyad_cynism := (has_anticipation + has_disgust)==2]
-emo_csv_usr_lean[, dyad_pessimism := (has_anticipation + has_sadness)==2]
-emo_csv_usr_lean[, dyad_confusion := (has_anticipation + has_surprise)==2]
-
-emo_csv_usr_lean[, dyad_disappointment := (has_sadness + has_surprise)==2]
-emo_csv_usr_lean[, dyad_remorse := (has_sadness + has_disgust)==2]
-
-emo_csv_usr_lean[, dyad_unbelief := (has_surprise + has_disgust)==2]
-
+# compute dyads
+emo_csv_usr_lean <- merge(emo_csv, usr_lean) %>% compute_dyads_comments()
 comments_dyad_cols = names(emo_csv_usr_lean)[which(names(emo_csv_usr_lean)%>% str_detect('dyad'))]
-
-# compute dyads in users
-usr_dyads <- emo_csv_usr_lean[,.(
-  love = mean(dyad_love),
-  submission = mean(dyad_submission),
-  curiosity = mean(dyad_curiosity),
-  sentimentality = mean(dyad_sentimentality),
-  hope = mean(dyad_hope),
-  dominance = mean(dyad_dominance),
-  ambivalence = mean(dyad_ambivalence),
-  optimism = mean(dyad_optimism),
-  guilt = mean(dyad_guilt),
-  pride = mean(dyad_pride),
-  delight = mean(dyad_delight),
-  morbidness = mean(dyad_morbidness),
-  bittersweetness = mean(dyad_bittersweetness),
-  alarm = mean(dyad_alarm),
-  despair = mean(dyad_despair),
-  anxiety = mean(dyad_anxiety),
-  shame = mean(dyad_shame),
-  frozenness = mean(dyad_frozenness),
-  contempt = mean(dyad_contempt),
-  aggressiveness = mean(dyad_aggressiveness),
-  envy = mean(dyad_envy),
-  outrage = mean(dyad_outrage),
-  cynism = mean(dyad_cynism),
-  pessimism = mean(dyad_pessimism),
-  confusion = mean(dyad_confusion),
-  disappointment = mean(dyad_disappointment),
-  remorse = mean(dyad_remorse),
-  unbelief = mean(dyad_unbelief),
-  is_usr_questionable = mean(is_usr_questionable) ), by=Nome_Utente]
-
+usr_dyads <- emo_csv_usr_lean %>% compute_dyad_usr()
 usr_dyad_cols = comments_dyad_cols%>%str_remove('dyad_')
 
 # perform a permutation test
