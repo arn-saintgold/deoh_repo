@@ -37,10 +37,9 @@ usr_dyads_means <- usr_dyads[,lapply(.SD, mean),
 # - shuffle comments' emotions
 usr_n_lean <- to_be_shuffled[,.SD,.SDcols = c("Nome_Utente", "is_usr_questionable")]
 
-N_RESHUFFLINGS = (parallel::detectCores()-1)*10
 #shuffled_comment_dyads_distribution<-data.table()
 shuffled_usr_dyads_distribution<-data.table()
-#pb = txtProgressBar(min = 0, max = N_RESHUFFLINGS, initial = 0) 
+
 
 #cl<-parallel::makeForkCluster(getOption("cl.cores", parallel::detectCores()-1))
 cl<-parallel::makeCluster(getOption("cl.cores", parallel::detectCores()-1))
@@ -83,7 +82,5 @@ shuffled_usr_dyads_distribution<-foreach (i = 1:N_RESHUFFLINGS,.combine = rbind)
 }
 parallel::stopCluster(cl)
 tictoc::toc()
+fwrite(shuffled_usr_dyads_distribution, file.path(data_dir, "shuffled_usr_dyads_distribution.csv"))
 #close(pb)
-
-34.03*1e5/N_RESHUFFLINGS
-lubridate::seconds_to_period(25.02*1e5/N_RESHUFFLINGS)
