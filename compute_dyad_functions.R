@@ -86,6 +86,18 @@ compute_dyad_usr <- function(emo_csv_usr_lean){
   
 }
 
+# reference table for dyads
+Dyad_DF <- data.table(Dyad = usr_dyad_cols, 
+                      e1 = c(rep('trust',7), rep('joy',6), rep('fear',5), rep('anger',4), rep('anticipation', 3), rep('sadness',2), 'surprise'),
+                      e2 = c(c("joy","fear","surprise","sadness","anticipation","anger","disgust"),
+                             c("anticipation","fear","anger","surprise","disgust","sadness"),
+                             c("surprise","sadness","anticipation","disgust","anger"),
+                             c("disgust","anticipation","sadness","surprise"),
+                             c("disgust","sadness","surprise"),
+                             c("surprise","disgust"),
+                             "disgust"
+                      ))
+
 # Example
 
 if( F ){

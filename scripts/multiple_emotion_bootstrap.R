@@ -84,3 +84,111 @@ parallel::stopCluster(cl)
 tictoc::toc()
 fwrite(shuffled_usr_dyads_distribution, file.path(data_dir, "shuffled_usr_dyads_distribution.csv"))
 #close(pb)
+
+# statistical test on shuffled distribution
+
+shuffled_usr_dyads_distribution<-fread(file.path(data_dir, "shuffled_usr_dyads_distribution.csv"))
+
+usr_dyad_shuffled_means <- shuffled_usr_dyads_distribution[,lapply(.SD, mean),.SDcols = usr_dyad_cols, by = is_usr_questionable]
+usr_dyad_shuffled_sd <- shuffled_usr_dyads_distribution[,lapply(.SD, sd),.SDcols = usr_dyad_cols, by = is_usr_questionable]
+
+n_signigicant_dyads = 0
+for (rel in usr_dyad_shuffled_means[,is_usr_questionable]){
+  message(if_else(rel == 0, "RELIABLE", "QUESTIONABLE"))
+  for (dyad in usr_dyad_cols){
+    
+    original_dyad_mean = usr_dyads_means[is_usr_questionable == rel,get(dyad)]
+    shuffled_dyad_mean = usr_dyad_shuffled_means[is_usr_questionable == rel,get(dyad)]
+    shuffled_dyad_sd = usr_dyad_shuffled_sd[is_usr_questionable == rel,get(dyad)]
+    dyad_is_significant <- original_dyad_mean > shuffled_dyad_mean + shuffled_dyad_sd*2
+    msg <- str_flatten(c(dyad," (",
+                         Dyad_DF[Dyad == dyad, e1]," + ",Dyad_DF[Dyad == dyad, e2],
+                         ") ",if_else(dyad_is_significant==T, ' IS ', ' is NOT '),
+                         'higher than chance.'))
+    if(dyad_is_significant){
+      message(msg)
+      n_signigicant_dyads = n_signigicant_dyads + 1
+    }
+  }
+}
+
+
+for (rel in usr_dyad_shuffled_means[,is_usr_questionable]){
+  message(if_else(rel == 0, "RELIABLE", "QUESTIONABLE"))
+  for (dyad in usr_dyad_cols){
+    
+    original_dyad_mean = usr_dyads_means[is_usr_questionable == rel,get(dyad)]
+    shuffled_dyad_mean = usr_dyad_shuffled_means[is_usr_questionable == rel,get(dyad)]
+    shuffled_dyad_sd = usr_dyad_shuffled_sd[is_usr_questionable == rel,get(dyad)]
+    dyad_is_absent <- original_dyad_mean < shuffled_dyad_mean - shuffled_dyad_sd*2
+    msg <- str_flatten(c(dyad," (",
+                         Dyad_DF[Dyad == dyad, e1]," + ",Dyad_DF[Dyad == dyad, e2],
+                         ") ",if_else(dyad_is_absent==T, ' IS ', ' is NOT '),
+                         'lower than chance.'))
+    if(dyad_is_absent){
+      message(msg)
+      
+    }
+  }
+}
+
+for (rel in usr_dyad_shuffled_means[,is_usr_questionable]){
+  message(if_else(rel == 0, "RELIABLE", "QUESTIONABLE"))
+  for (dyad in usr_dyad_cols){
+    
+    original_dyad_mean = usr_dyads_means[is_usr_questionable == rel,get(dyad)]
+    shuffled_dyad_mean = usr_dyad_shuffled_means[is_usr_questionable == rel,get(dyad)]
+    shuffled_dyad_sd = usr_dyad_shuffled_sd[is_usr_questionable == rel,get(dyad)]
+    dyad_is_absent <- original_dyad_mean < shuffled_dyad_mean - shuffled_dyad_sd*2
+    dyad_is_significant <- original_dyad_mean > shuffled_dyad_mean + shuffled_dyad_sd*2
+    dyad_is_chance <- !dyad_is_significant & !dyad_is_absent
+    msg <- str_flatten(c(dyad," (",
+                         Dyad_DF[Dyad == dyad, e1]," + ",Dyad_DF[Dyad == dyad, e2],
+                         ") ",if_else(dyad_is_chance==T, ' IS ', ' is NOT '),
+                         'due to chance.'))
+    if(dyad_is_chance){
+      message(msg)
+      
+    }
+  }
+}
+
+results <- data.table()
+significant_differences <- c("delight", "pessimism", "submission", "dominance", "frozenness")
+for (dyad in usr_dyad_cols){
+  
+  original_dyad_mean_R <- usr_dyads_means[is_usr_questionable == 0, get(dyad)]
+  original_dyad_mean_Q <- usr_dyads_means[is_usr_questionable == 1, get(dyad)]
+  
+  shuffled_dyad_mean_R = usr_dyad_shuffled_means[is_usr_questionable == 0, get(dyad)]
+  shuffled_dyad_mean_Q = usr_dyad_shuffled_means[is_usr_questionable == 1, get(dyad)]
+  shuffled_dyad_sd_R = usr_dyad_shuffled_sd[is_usr_questionable == 0, get(dyad)]
+  shuffled_dyad_sd_Q = usr_dyad_shuffled_sd[is_usr_questionable == 1, get(dyad)]
+  
+  dyad_is_absent_R <- original_dyad_mean_R < shuffled_dyad_mean_R - shuffled_dyad_sd_R*2
+  dyad_is_significant_R <- original_dyad_mean_R > shuffled_dyad_mean_R + shuffled_dyad_sd_R*2
+  dyad_is_chance_R <- !dyad_is_significant_R & !dyad_is_absent_R
+  
+  dyad_is_absent_Q <- original_dyad_mean_Q < shuffled_dyad_mean_Q - shuffled_dyad_sd_Q*2
+  dyad_is_significant_Q <- original_dyad_mean_Q > shuffled_dyad_mean_Q + shuffled_dyad_sd_Q*2
+  dyad_is_chance_Q <- !dyad_is_significant_Q & !dyad_is_absent_Q
+  
+  significance_R <- str_flatten(c(ifelse(dyad_is_chance_R, "Chance", ""),ifelse(dyad_is_absent_R, "Lower", ""), ifelse(dyad_is_significant_R, "Higher", "")) )
+  significance_Q <- str_flatten(c(ifelse(dyad_is_chance_Q, "Chance", ""),ifelse(dyad_is_absent_Q, "Lower", ""), ifelse(dyad_is_significant_Q, "Higher", "")) )
+  
+  this_row<- data.frame(dyad,
+               Dyad_DF[Dyad == dyad, e1],
+               Dyad_DF[Dyad == dyad, e2],
+    usr_dyads_means[is_usr_questionable == 0,get(dyad)],
+    significance_R,
+    usr_dyads_means[is_usr_questionable == 1,get(dyad)],
+    significance_Q,
+    dyad %in% significant_differences
+    )
+  results<-rbind(results, this_row)
+}
+names(results)=c("Dyad","e1","e2","MAp_mean_dyad_value","MAp_significance","MIp_mean_dyad_value","MIp_significance","Difference_is_significant" )
+
+fwrite(results, file.path(plot_dir, "dyad_results.tsv"))
+fwrite(results, file.path(plot_dir, "dyad_results.csv"))
+
