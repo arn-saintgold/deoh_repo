@@ -34,4 +34,10 @@
 *.pdf
 *.png
 *.svg
+*.eps
 
+# don't allow temporary output
+output.txt
+
+# don't allow stuff for publications
+*.odt

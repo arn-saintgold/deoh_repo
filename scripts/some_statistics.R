@@ -57,6 +57,8 @@ Ln[leaning <=.25,.N]
 Ln[leaning >.25 ][leaning < .75,.N]
 Ln[,.N]
 
+DF3[is_questionable==F & joy>0 & has_emotion>0,.N]/DF3[is_questionable==F & has_emotion>0,.N]*100-DF3[is_questionable==T & joy>0 & has_emotion>0,.N]/DF3[is_questionable==T & has_emotion>0,.N]*100
+DF3[is_questionable==F & fear>0 & has_emotion>0,.N]/DF3[is_questionable==F & has_emotion>0,.N]*100-DF3[is_questionable==T & fear>0 & has_emotion>0,.N]/DF3[is_questionable==T & has_emotion>0,.N]*100
 # Compute chi^2 test on toxicity messages
 chiDF <- DF3[trust > 0]
 chiDF[,isAppropriate:= Label == '0. appropriato']
