@@ -4,7 +4,7 @@
 # Barplots show p(e|r,t), probability of finding emotion e in a comment, given 
 #   that the comment is labeled with toxicity label t and was posted in a 
 #   channel with reliability r
-source('packages_n_global_variables.R')
+source('0_packages_n_global_variables.R')
 emo_csv <- (fread(emo_csv_path))[n_emotions>0]
 
 emo_colors_darker = alternative_colors_darker

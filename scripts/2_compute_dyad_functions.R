@@ -1,4 +1,4 @@
-source('packages_n_global_variables.R')
+source('0_packages_n_global_variables.R')
 
 # The file contains functions to extract dyads data from comments data with columns:
 # - has_emo for each emotion in pulutchik framework

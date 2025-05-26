@@ -53,10 +53,9 @@ def chunks(lst, n):
     n = max(1, n)
     return [lst[i : i + n] for i in range(0, len(lst), n)]
 
-
-if __name__ == "__main__":
-    project_data_dir = "../../../data"
-    data_dir = "processing"
+def main():
+    project_data_dir = "data"
+    data_dir = "processed"
     filename = "comments_it_cleaning.csv"
     source_path = os.path.join(project_data_dir, data_dir)
     source_file_path = os.path.join(source_path, filename)
@@ -126,3 +125,7 @@ if __name__ == "__main__":
     batch_mp_time = str(datetime.timedelta(seconds=batch_mp_time))
 
     print("\nTime taken to combine and write: ", batch_mp_time, "\n")
+
+
+if __name__ == "__main__":
+    main()

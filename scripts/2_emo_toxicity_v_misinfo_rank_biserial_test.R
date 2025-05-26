@@ -2,7 +2,7 @@
 #   Toxicity in comments with a specific emotion and reliability of the comment
 #   Comments are stored in 'rank_biserial_test_comments.rds'
 
-source('packages_n_global_variables.R')
+source('0_packages_n_global_variables.R')
 
 emo_csv <- fread(emo_csv_path)
 

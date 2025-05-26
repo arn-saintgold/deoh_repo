@@ -1,9 +1,9 @@
-library(data.table)
-library(tidyverse)
-library(DescTools)
+# This file computes various counts and chi^2 tests
+source('0_packages_n_global_variables.R')
 
 # Counting comments by user leaning
-DF<-fread('/home/arnaldo/Downloads/Archivio_emolib_da_sistemare/drive_bkp/comments_it_cleaning.csv')
+DF<-fread(file.path(data_dir,'comments_it_cleaning.csv'))
+#DF<-fread('/home/arnaldo/Downloads/Archivio_emolib_da_sistemare/drive_bkp/comments_it_cleaning.csv')
 setkey(DF, Nome_Utente)
 Ns<-DF[,.N,by=c('Nome_Utente')]
 Qs<-DF[,sum(as.integer(is_questionable)), by = c('Nome_Utente')]
@@ -14,9 +14,8 @@ Ln[leaning <=.25,.N]
 Ln[leaning >.25 & leaning < .75,.N]
 
 
-
 # Counting users by leaning
-DF2 <-fread("/home/arnaldo/Downloads/Archivio_emolib_da_sistemare/drive_bkp2/usr_emo_lean.gz")
+DF2 <-fread(file.path(data_dir,"usr_emo_lean.gz"))
 
 DF2[leaning<=.25,.N]
 DF2[leaning>=.75,.N]
@@ -40,14 +39,15 @@ chi_matrix <- as.matrix(contingency_table[, -1, with = FALSE])  # Remove the fir
 chi_test <- chisq.test(chi_matrix)
 
 #  Compute Cramer's V
-cramers_v <- CramerV(chi_matrix)
+cramers_v <- DescTools::CramerV(chi_matrix)
 
 # Output results
 print(chi_test)
 cat("\nCramér's V:", cramers_v, "\n")
 
-
-DF3 <-fread("/home/arnaldo/Downloads/Archivio_emolib_da_sistemare/drive_bkp2/emo_csv_statistics.gz")
+# Compute chi^2 test on comments containing trust,
+# and difference in proportion between Q/R user comments containing joy/fear
+DF3 <-fread(file.path(data_dir,"emo_csv_statistics.gz"))
 Ns<-DF3[,.N,by=c('Nome_Utente')]
 Qs<-DF3[,sum(as.integer(is_questionable)), by = c('Nome_Utente')]
 Ln<-merge(Ns,Qs)
@@ -81,9 +81,7 @@ cramers_v <- CramerV(chi_matrix)
 print(chi_test)
 cat("\nCramér's V:", cramers_v, "\n")
 
-
-
-
+# Chi tests on emotion presence
 hasemo <-DF3[,.(has_emo=sum(has_emotion), n_comments = .N), by = c('Nome_Utente')]
 DF4 <- merge(hasemo, Ln)
 DF4[,.label := NA]
@@ -121,4 +119,3 @@ print(chi_test)
 cat("\nCramér's V:", cramers_v, "\n")
 
 emotions <- c("anger", "anticipation", "disgust", "fear", "joy", "sadness", "surprise", "trust")
-

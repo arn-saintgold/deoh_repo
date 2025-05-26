@@ -4,7 +4,7 @@
 #   co-occurrences; significativeness is obtained confronting original 
 #   emotions' values  with bootstrapped emotions' values
 
-source('packages_n_global_variables.R')
+source('0_packages_n_global_variables.R')
 
 # order emotion name vector by positivity and relevance
 emotions <- emotions[c(6, 5, 2, 8, 7, 4, 1, 3)]

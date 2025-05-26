@@ -1,7 +1,7 @@
 # Recreate plots from previous study (Dynamics of Online Hate[...] Cinelli et al.)
 #   to inspect data composition
 
-source('packages_n_global_variables.R')
+source('0_packages_n_global_variables.R')
 
 emo_csv <- fread(emo_csv_path)
 

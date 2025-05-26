@@ -1,6 +1,7 @@
 library(dplyr)
-library(knitr)
-library(kableExtra)
+
+
+source(file.path('scripts','2_compute_dyad_functions.R'))
 
 features <- usr_dyad_cols
 prev_results <- data.frame()

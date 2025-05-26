@@ -1,5 +1,4 @@
-source("packages_n_global_variables.R")
-source('compute_dyad_functions.R')
+source(file.path('scripts','2_compute_dyad_functions.R'))
 
 N_RESHUFFLINGS = 1e5
 

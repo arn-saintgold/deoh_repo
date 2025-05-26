@@ -1,7 +1,5 @@
-library(dplyr)
-library(knitr)
-library(kableExtra)
-library(formattable)
+source(file.path('scripts','2_compute_dyad_functions.R'))
+
 
 usr_emo_lean <- fread(usr_emo_lean_path)
 emo_csv <- fread(emo_csv_path)

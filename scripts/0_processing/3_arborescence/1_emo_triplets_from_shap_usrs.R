@@ -1,7 +1,7 @@
 # It computes, within comments containing emotion X, co-occurrences of emotions Y and K
 #   then performs a bootstrap for each emotion X, shuffling the other 7 emotions
 
-source('packages_n_global_variables.R')
+source('0_packges_n_global_variables.R')
 
 # emotions <-c("anger", "anticipation", "disgust", "fear", "joy", "trust", "sadness","surprise")
 
