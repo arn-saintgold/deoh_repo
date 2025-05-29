@@ -1,3 +1,6 @@
+# This file computes the mann whitney U tests on dyads included in the last two 
+# tables of the appendix
+
 library(dplyr)
 
 

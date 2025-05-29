@@ -1,3 +1,6 @@
+# This file computes the mann whitney U tests on dyads included in the last two 
+# tables of the appendix
+
 source(file.path('scripts','2_compute_dyad_functions.R'))
 
 

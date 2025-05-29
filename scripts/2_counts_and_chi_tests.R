@@ -1,9 +1,10 @@
 # This file computes various counts and chi^2 tests
+# on users, and on comments
 source('0_packages_n_global_variables.R')
 
 # Counting comments by user leaning
 DF<-fread(file.path(data_dir,'comments_it_cleaning.csv'))
-#DF<-fread('/home/arnaldo/Downloads/Archivio_emolib_da_sistemare/drive_bkp/comments_it_cleaning.csv')
+
 setkey(DF, Nome_Utente)
 Ns<-DF[,.N,by=c('Nome_Utente')]
 Qs<-DF[,sum(as.integer(is_questionable)), by = c('Nome_Utente')]
