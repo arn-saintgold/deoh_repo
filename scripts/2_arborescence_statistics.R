@@ -1,4 +1,7 @@
-source('packages_n_global_variables.R')
+# This script computes the arborescence statistics used for the arborescence 
+# figures in the article
+
+source('0_packages_n_global_variables.R')
 
 emo_triplets_in_shapley_users <- fread(file.path(data_dir, "emo_triplets_in_shapley_users_comments.tsv"))
 
@@ -36,7 +39,7 @@ same_emos_res<-same_emos[, .(same_emo=-sum(same_emo)), by=is_questionable]
 same_emos_bkp<-same_emos[, .(same_emo=sum(same_emo)), by=is_questionable]
 same_emo_row<-same_emos_res%>%dcast(.~is_questionable,value.var = 'same_emo')
 names(same_emo_row)=names(same_emo_row)%>%str_replace('\\.', 'emo1')
-same_emo_row
+#same_emo_row
 partial4 <- rbindlist(list(partial3, same_emo_row))
 diff_emos<-partial4[,.(diff_emo=colSums(.SD)),.SDcols = c('0','1')]
 
@@ -46,3 +49,5 @@ same_emos_weighted<-same_emos[, .(tot_emos=sum(same_emo)/choose(7,1)), by=is_que
 
 res_weighted<-same_emos_weighted+diff_emos_weighted
 final_weighted <- ((res_weighted[1]-res_weighted[2])/res_weighted[2])*100
+
+final_weighted
