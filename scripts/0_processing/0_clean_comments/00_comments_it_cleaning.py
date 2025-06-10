@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     os.makedirs(dest_path, exist_ok=True)
 
-    print(f'READING FROM {source_file_path} ')
+    print(f"READING FROM {source_file_path} ")
     df = pd.read_csv(source_file_path)
 
     filter_char = lambda c: ord(c) < 256
@@ -67,6 +67,46 @@ if __name__ == "__main__":
     df.loc[conte_idx, "Testo"] = df.loc[conte_idx, "Testo"].str.replace(
         "[vV]is[-\\.]?[cConte]", "visconte - HerrGraf - "
     )
+
+    speranza_idx = df.Testo.str.contains("[^(i|Il)]\\W?[sS]peranza\\s[^dD]")
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\s[sS]peranza\\s", " HerrHoffnung "
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\s[sS]peranza,", " HerrHoffnung,"
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\s[sS]peranza\\.", " HerrHoffnung."
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\s[sS]peranza\\?", " HerrHoffnung?"
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\s[sS]peranza\\!", " HerrHoffnung!"
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "[sS]peranza ", "HerrHoffnung "
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        ",[sS]peranza ", ",HerrHoffnung "
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\?[sS]peranza ", "?HerrHoffnung "
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\.[sS]peranza ", ".HerrHoffnung "
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\![sS]peranza ", "!HerrHoffnung "
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\.[sS]peranza\\.", ".HerrHoffnung."
+    )
+    df.loc[speranza_idx, "Testo"] = df.loc[speranza_idx, "Testo"].str.replace(
+        "\\.[sS]peranza,", ".HerrHoffnung,"
+    )
+
+
     # other sensible names
     df["Testo"] = df["Testo"].str.replace("Draghi", "HerrDrachen", case=True)
 
@@ -76,7 +116,7 @@ if __name__ == "__main__":
     df["Testo"] = df["Testo"].str.replace("\\.\\.$", "...", case=False)
 
     df["N_words"] = df["Testo"].str.count(" ") + 1
-    df['csv_id'] = range(len(df))
+    df["csv_id"] = range(len(df))
     # save cleaned comments
     print(f"...CLEANED.\nSAVING TO {dest_file_path}\n", flush=True)
     df.to_csv(dest_file_path)

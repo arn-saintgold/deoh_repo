@@ -2,7 +2,7 @@
 # Graphs are stored in CompressedDictionary format as 'comments_it_graphs.cd'
 # Z-Scores are stored as csv format in 'comments_it_zscores.csv'
 
-from emolib import EmoScores
+from emoatlas import EmoScores
 import pandas as pd
 from compressed_dictionary import CompressedDictionary
 from multiprocessing import Pool
@@ -53,6 +53,7 @@ def chunks(lst, n):
     n = max(1, n)
     return [lst[i : i + n] for i in range(0, len(lst), n)]
 
+
 def main():
     project_data_dir = "data"
     data_dir = "processed"
@@ -69,7 +70,9 @@ def main():
 
     # standard multiprocessing code
     try:
-        pool = Pool(len(os.sched_getaffinity(0)))
+        pool = Pool(
+            max(len(os.sched_getaffinity(0)) - 2, 1)
+        )  # reserve 2 cores for other tasks
 
         # attach together comments ID, and comments Textual content
         zip_id_text = zip(df.csv_id, df.Testo)
