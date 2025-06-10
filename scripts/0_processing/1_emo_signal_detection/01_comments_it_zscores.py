@@ -72,6 +72,7 @@ def main():
     zscores_file_path = os.path.join(source_path, "comments_it_zscores.csv")
 
     df = pd.read_csv(source_file_path)
+    # df = df.iloc[:100]  # for testing purposes, remove this line in production
 
     print("...Finished reading data.\nStarting multiprocess extraction...", flush=True)
     start_time = time.time()
@@ -124,7 +125,7 @@ def main():
         zscores[k] = master_zd[k]
 
     zdf = pd.DataFrame.from_dict(zscores, orient="index")
-    zdf["dict_idx"] = zdf.index
+    zdf["csv_id"] = zdf.index
 
     zdf.to_csv(zscores_file_path, index=False)
 

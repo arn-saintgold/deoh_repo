@@ -50,3 +50,5 @@ emo_colors_darker = c('Trust' = '#8fa95e','Joy' = '#ffdf3b', 'Anticipation' = '#
 
 alternative_colors = c('Trust' = '#9ae39e','Joy' = '#ffd940', 'Anticipation' = '#ff965e', 'Surprise' = '#686abe', 'Fear' = '#59afab', 'Sadness' = '#5ca0df', 'Anger' = '#ff407b', 'Disgust' = '#a071bc')
 alternative_colors_darker = c('Trust' = '#81dc86','Joy' = '#ffcf10', 'Anticipation' = '#ff7c36', 'Surprise' = '#4245ae', 'Fear' = '#2f9b96', 'Sadness' = '#3388d7', 'Anger' = '#ff105a', 'Disgust' = '#884dab')
+
+print("Packages and global variables loaded successfully.")

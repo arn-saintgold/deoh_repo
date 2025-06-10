@@ -1,10 +1,12 @@
 #!/bin/bash
 
-virtualenv .venv --python=python3.11
+
+# virtualenv .venv --python=python3.11
+python3 -m venv .venv
 source .venv/bin/activate
-pip install --upgrade pip setuptools wheel
-pip install emoatlas
-pip install -r requirements.txt
+#pip install --upgrade pip setuptools wheel
+#pip install emoatlas
+#pip install -r requirements.txt
 if [ $? -eq 0 ]; then
     echo "Python environment set up successfully."
 else
@@ -12,7 +14,7 @@ else
     exit
 fi
 
-python3 -m spacy download it_core_news_lg
+ python3 -m spacy download it_core_news_lg
 
 python3 ./scripts/0_processing/0_clean_comments/00_comments_it_cleaning.py
 
@@ -31,3 +33,5 @@ else
     echo "Error: 01_comments_it_zscores.py encountered an issue."
     exit
 fi
+
+
