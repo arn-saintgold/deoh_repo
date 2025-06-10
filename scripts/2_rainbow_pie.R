@@ -1,9 +1,6 @@
-# Plots distribution of emotions in comments using Barplot and Pies
-# Pies show p(e|r), probability of finding emotion e in a comment, given that 
-#   the comment was posted in a channel with reliability r
-# Barplots show p(e|r,t), probability of finding emotion e in a comment, given 
-#   that the comment is labeled with toxicity label t and was posted in a 
-#   channel with reliability r
+message('This script plots and saves distribution of emotions in comments using Barplot and Pies.\n
+ Pies show p(e|r), probability of finding emotion e in a comment, given that the comment was posted in a channel with reliability r.\n
+ Barplots show p(e|r,t), probability of finding emotion e in a comment, given that the comment is labeled with toxicity label t and was posted in a channel with reliability r.')
 source('0_packages_n_global_variables.R')
 emo_csv <- (fread(emo_csv_path))[n_emotions>0]
 

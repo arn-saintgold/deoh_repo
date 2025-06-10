@@ -1,5 +1,6 @@
-source("0_packages_n_global_variables.R")
+message("This script computes co-occurrence of emotions in comments, and tests whether the co-occurrence is significantly different from random sampling.\n")
 
+source("0_packages_n_global_variables.R")
 
 usr_emo_lean <- fread(usr_emo_lean_path)
 emo <- fread(emo_csv_path)

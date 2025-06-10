@@ -1,14 +1,6 @@
 # Extracts Z-Scores of emotions and formamentis graphs from comments in 'comments_it_preprocessing.csv'
 # Graphs are stored in CompressedDictionary format as 'comments_it_graphs.cd'
 # Z-Scores are stored as csv format in 'comments_it_zscores.csv'
-from spacy.cli.download import download as spacy_download
-import spacy
-# Download the Italian language model if not already installed
-try:
-  nlp_lg = spacy.load("en_core_web_lg")
-except ModuleNotFoundError:
-  spacy_download(model="en_core_web_lg")
-  nlp_lg = spacy.load("en_core_web_lg")
 
 from emoatlas import EmoScores
 import pandas as pd
@@ -74,7 +66,7 @@ def main():
     df = pd.read_csv(source_file_path)
     # df = df.iloc[:100]  # for testing purposes, remove this line in production
 
-    print("...Finished reading data.\nStarting multiprocess extraction...", flush=True)
+    print("...saved.\nStarting multiprocess extraction...", flush=True)
     start_time = time.time()
 
     # standard multiprocessing code

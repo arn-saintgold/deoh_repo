@@ -1,4 +1,4 @@
-# Chi square test on independence between emotions and source trustworthiness 
+message('This script computes Chi square test on independence between emotions and source trustworthiness')
 
 source('0_packages_n_global_variables.R')
 emo_csv <- fread(emo_csv_path)

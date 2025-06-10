@@ -1,5 +1,4 @@
-# This script computes the arborescence statistics used for the arborescence 
-# figures in the article
+message("This script computes the arborescence statistics used for the arborescence figures in the article")
 
 source('0_packages_n_global_variables.R')
 

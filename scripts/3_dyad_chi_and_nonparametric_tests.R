@@ -4,7 +4,7 @@
 library(dplyr)
 
 
-source(file.path('scripts','2_compute_dyad_functions.R'))
+source(file.path('scripts','2_compute_dyad_functions.r'))
 
 features <- usr_dyad_cols
 prev_results <- data.frame()

@@ -1,5 +1,4 @@
-# This file computes various counts and chi^2 tests
-# on users, and on comments
+message('This script computes various counts and chi^2 tests on users, and on comments')
 source('0_packages_n_global_variables.R')
 
 # Counting comments by user leaning
