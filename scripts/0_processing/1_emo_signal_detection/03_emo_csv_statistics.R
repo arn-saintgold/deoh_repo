@@ -1,6 +1,6 @@
 # Enriches the original data with emotional signals and other statistics
 # It stores the results in the file 'merged_comments_it_cleaning.csv.gz'
-source('0_packages_n_global_variables.R')
+source('scripts/0_processing/1_emo_signal_detection/02_merged_comments_it_cleaning.R')
 
 source_path = file.path(data_dir, 'merged_comments_it_cleaning.csv.gz')
 
