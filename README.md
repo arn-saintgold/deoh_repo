@@ -10,12 +10,11 @@ R is employed for data manipulation, statistical tests, computation of the arbor
 
 Ensure you have `Rscript` and `Python3.X` installed in your system.
 
-
 ## Data
 
 The code assumes the presence of a file named `comments_it_preprocessing.csv` in the `data/raw` folder.
 
-The comments' data is available at the [clarin repository](http://hdl.handle.net/11356/1450), however nor the YouTube channel labels, nor the User Names can be published.
+The comments' data is available at its [clarin repository](http://hdl.handle.net/11356/1450), however nor the YouTube channel labels, nor the User Names can be published.
 
 ## Usage
 
@@ -26,4 +25,5 @@ Ensure you are running the code from the `deoh_repo` folder
 3. Run `bash 2_SHAP_script.sh` to compute the shapley scores for user emotions.
 4. Run the code in the notebook `deoh_repo/scripts/1_shap_results/2_shap_summary_colored.ipynb`.
 5. Run `Rscript ./scripts/1_shap_results/3_feature_importance_table.R` to reproduce the feature importance table results.
-6. 
+6. Run `bash 4_run_tests.sh` to plot figure 1 of the article, and the chi² tests found in the paper.
+
