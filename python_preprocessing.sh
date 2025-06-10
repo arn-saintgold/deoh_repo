@@ -1,5 +1,19 @@
 #!/bin/bash
 
+virtualenv .venv --python=python3.11
+source .venv/bin/activate
+pip install --upgrade pip setuptools wheel
+pip install emoatlas
+pip install -r requirements.txt
+if [ $? -eq 0 ]; then
+    echo "Python environment set up successfully."
+else
+    echo "Error: Failed to set up Python environment."
+    exit
+fi
+
+python3 -m spacy download it_core_news_lg
+
 python3 ./scripts/0_processing/0_clean_comments/00_comments_it_cleaning.py
 
 if [ $? -eq 0 ]; then
