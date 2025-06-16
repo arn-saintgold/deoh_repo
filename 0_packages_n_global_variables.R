@@ -1,13 +1,6 @@
-#install.packages("data.table", type = "source", repos = "https://Rdatatable.gitlab.io/data.table")
+# 
+
 # parallel computation
-
-list.of.packages <- c("dplyr", "data.table", "tictoc","parallel","doParallel",
-                      "foreach",'purrr','rcompanion','xtable','ggplot2','ggpattern',
-                      'ggrepel','RColorBrewer','lemon','scales','latex2exp','devtools',
-                      'knitr','kableExtra','formattable', 'DescTools')
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if(length(new.packages)) install.packages(new.packages)
-
 library(purrr)
 library(foreach)
 library(parallel)
@@ -28,7 +21,7 @@ library(RColorBrewer)
 library(scales)
 library(latex2exp)
 library(lemon)
-devtools::install_github("teunbrand/elementalist")
+#devtools::install_github("teunbrand/elementalist")
 library(elementalist)
 library(knitr)
 

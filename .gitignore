@@ -17,9 +17,6 @@
 *.DS_Store
 
 # R settings
-*.Rproj.user
-.Rproj.user
-*.Rproj
 *.Rhistory
 
 # models
@@ -37,3 +34,4 @@ output.txt
 
 # word documents 
 *.odt
+.Rproj.user
