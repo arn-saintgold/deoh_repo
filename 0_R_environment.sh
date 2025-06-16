@@ -2,7 +2,7 @@
 
 # This script sets up an R environment.
 
-Rscript 0_R_environment.R
+Rscript 0_R_environment_loader.R
 if [ $? -eq 0 ]; then
     echo "R environment set up successfully."
 else
