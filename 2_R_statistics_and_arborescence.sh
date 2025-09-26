@@ -1,8 +1,8 @@
-Rscript ./scripts/0_processing/1_emo_signal_detection/03_comments_it_zscores.R
+Rscript ./scripts/0_processing/1_emo_signal_detection/03_emo_csv_statistics.R
 if [ $? -eq 0 ]; then
     echo "z-scores computed successfully."
 else
-    echo "Error: 03_comments_it_zscores.R encountered an issue."
+    echo "Error: 03_emo_csv_statistics.R encountered an issue."
     exit
 fi
 
